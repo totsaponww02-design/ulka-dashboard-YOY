@@ -147,7 +147,6 @@
                 </div>
                 
                 <div class="flex flex-wrap items-center gap-3 self-start md:self-auto">
-                    <!-- Add Product Button -->
                     <button onclick="openAddProductModal()" class="px-5 py-2.5 text-sm bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl font-bold flex items-center gap-2 transition-all shadow-sm border border-emerald-200">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         เพิ่มสินค้าใหม่
@@ -243,7 +242,7 @@
         </div>
 
         <!-- Add Product Modal -->
-        <div id="addProductModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm transition-opacity">
+        <div id="addProductModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0">
             <div class="bg-white rounded-2xl p-6 md:p-8 w-full max-w-md shadow-2xl transform transition-all border border-slate-100">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -270,6 +269,48 @@
                 <div class="flex justify-end gap-3">
                     <button onclick="closeAddProductModal()" class="px-5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-bold transition-colors">ยกเลิก</button>
                     <button onclick="submitNewProduct()" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 font-bold shadow-md shadow-indigo-200 transition-all">บันทึกสินค้าใหม่</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Product Modal -->
+        <div id="editProductModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0">
+            <div class="bg-white rounded-2xl p-6 md:p-8 w-full max-w-lg shadow-2xl transform transition-all border border-slate-100">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        จัดการสินค้า
+                    </h3>
+                    <button onclick="closeEditProductModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+                
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">ชื่อสินค้า / รุ่น</label>
+                    <input type="text" id="editProductName" class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 outline-none font-medium text-slate-800 transition-all">
+                </div>
+                
+                <div class="mb-8">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">จัดอยู่ในหมวดหมู่</label>
+                    <select id="editProductCategory" class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 outline-none font-bold text-indigo-700 transition-all cursor-pointer">
+                        <!-- Options injected by JS -->
+                    </select>
+                </div>
+                
+                <!-- Updated Buttons for Archive/Delete -->
+                <div class="flex justify-between items-center gap-2 mt-4 pt-4 border-t border-slate-100">
+                    <button onclick="deleteProduct()" class="px-3 py-2.5 rounded-xl text-rose-500 hover:bg-rose-50 font-bold transition-colors flex items-center gap-1 text-sm border border-transparent hover:border-rose-200" title="ลบข้อมูลทั้งหมดทิ้ง">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        ลบถาวร
+                    </button>
+                    
+                    <div class="flex gap-2">
+                        <button onclick="archiveProduct()" class="px-4 py-2.5 rounded-xl text-slate-600 bg-slate-100 hover:bg-slate-200 font-bold transition-colors text-sm flex items-center gap-1.5" title="ย้ายไปหมวด 'ยกเลิกจำหน่าย' เพื่อซ่อนจากรายการหลัก แต่ยังคงประวัติยอดขายไว้คำนวณรวม">
+                            🛑 เลิกจำหน่าย (เก็บประวัติ)
+                        </button>
+                        <button onclick="submitEditProduct()" class="px-6 py-2.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 font-bold shadow-md shadow-indigo-200 transition-all text-sm">บันทึก</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -315,7 +356,8 @@
             "เครื่องกรองน้ำ": ["U5", "P3B", "RO-G600"],
             "เครื่องทำน้ำโซดา": ["Prosoda", "PROSODA-MAX", "PROSODA-MIX-SS", "PROSODA-MIX-PT"],
             "เครื่องปั่น": ["Blender", "Blender-2A", "Blender-2B"],
-            "อื่นๆ": ["HZB15YLR (BLACK)", "HXR-18", "HBQL-T30", "NEW-Blender 8001"]
+            "อื่นๆ": ["HZB15YLR (BLACK)", "HXR-18", "HBQL-T30", "NEW-Blender 8001"],
+            "ยกเลิกจำหน่าย": [] // Added new Archive Category
         };
 
         const categoryStyles = {
@@ -328,7 +370,8 @@
             "เครื่องกรองน้ำ": { color: '#10b981', bg: 'bg-emerald-500', text: 'text-emerald-600', icon: '💧' }, 
             "เครื่องทำน้ำโซดา": { color: '#d946ef', bg: 'bg-fuchsia-500', text: 'text-fuchsia-600', icon: '🥤' }, 
             "เครื่องปั่น": { color: '#f43f5e', bg: 'bg-rose-500', text: 'text-rose-600', icon: '🌪️' }, 
-            "อื่นๆ": { color: '#94a3b8', bg: 'bg-slate-400', text: 'text-slate-600', icon: '📦' } 
+            "อื่นๆ": { color: '#94a3b8', bg: 'bg-slate-400', text: 'text-slate-600', icon: '📦' },
+            "ยกเลิกจำหน่าย": { color: '#64748b', bg: 'bg-slate-600', text: 'text-slate-700', icon: '🛑' } 
         };
 
         let productsList = [];
@@ -337,10 +380,12 @@
         let monthNames = ["พ.ย. 68", "ธ.ค. 68", "ม.ค. 69", "ก.พ. 69", "มี.ค. 69", "เม.ย. 69"]; 
         let yearNames = ["ปี 2568", "ปี 2569"];
 
-        // Load Data - Using v7 storage keys but saving categoryMap as well to support custom products
+        // Load Data - Using v7 storage keys so we don't lose user data just entered
         const savedCatMap = localStorage.getItem('packReportCategoryMap_v7');
         if (savedCatMap) {
             categoryMap = JSON.parse(savedCatMap);
+            // Ensure the new Discontinued category exists for old users
+            if (!categoryMap["ยกเลิกจำหน่าย"]) categoryMap["ยกเลิกจำหน่าย"] = [];
         }
 
         // Rebuild productsList from categoryMap
@@ -350,7 +395,6 @@
             yoyMatrix[p] = [0, 0];
         });
 
-        // Populate Dropdown for Charts
         function populateProductDropdown() {
             const prodSelect = document.getElementById('singleProductSelect');
             prodSelect.innerHTML = '';
@@ -381,7 +425,7 @@
                 }
             });
         } else {
-            // Default Default Data mapping
+            // Default mapping
             dataMatrix["13F-WB"] = [13, 12, 18, 14, 21, 45];
             dataMatrix["13F-W"] = [9, 18, 18, 22, 42, 61];
             dataMatrix["20AF"] = [40, 50, 61, 57, 90, 178];
@@ -473,15 +517,23 @@
 
             // Generate Body Rows
             Object.keys(categoryMap).forEach(cat => {
+                // If it's discontinued and empty, skip rendering header if we want, but let's show it if it has items
+                if (categoryMap[cat].length === 0) return;
+
                 const trHeader = document.createElement('tr');
-                trHeader.className = "bg-slate-100/80 font-bold border-y border-slate-200";
+                trHeader.className = cat === "ยกเลิกจำหน่าย" ? "bg-slate-200/50 font-bold border-y border-slate-300" : "bg-slate-100/80 font-bold border-y border-slate-200";
                 trHeader.innerHTML = `<td colspan="${monthNames.length + 1}" class="px-6 py-2.5 text-slate-700 flex items-center gap-2 sticky left-0 z-10 w-fit">${categoryStyles[cat].icon} ประเภท: ${cat}</td>`;
                 tbody.appendChild(trHeader);
 
                 categoryMap[cat].forEach(product => {
                     const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-50 transition-colors group";
-                    let html = `<th scope="row" class="px-6 py-2.5 whitespace-nowrap text-slate-600 font-semibold pl-10 border-r border-slate-100 bg-white group-hover:bg-slate-50 sticky left-0 z-20 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">${product}</th>`;
+                    tr.className = cat === "ยกเลิกจำหน่าย" ? "hover:bg-slate-50 transition-colors group opacity-60 hover:opacity-100" : "hover:bg-slate-50 transition-colors group";
+                    let html = `<th scope="row" class="px-6 py-2.5 whitespace-nowrap text-slate-600 font-semibold pl-10 border-r border-slate-100 bg-white group-hover:bg-slate-50 sticky left-0 z-20 shadow-[2px_0_5px_rgba(0,0,0,0.02)] flex items-center justify-between">
+                        <span>${product}</span>
+                        <button onclick="openEditProductModal('${product}', '${cat}')" class="text-slate-300 hover:text-indigo-500 transition-colors opacity-0 group-hover:opacity-100 p-1" title="แก้ไข/ย้ายหมวดหมู่">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        </button>
+                    </th>`;
                     for(let i=0; i<monthNames.length; i++) {
                         let val = dataMatrix[product][i] === 0 ? '' : dataMatrix[product][i];
                         html += `<td class="px-2 py-1.5 text-center border-r border-slate-50 relative group-hover:bg-slate-50/50">
@@ -670,6 +722,7 @@
             } else if (currentChartMode === 'cat') {
                 Object.keys(categoryMap).forEach(cat => {
                     let catData = catMonthly[cat];
+                    // We can include 'ยกเลิกจำหน่าย' in chart if there's data, otherwise it's fine
                     if(catData.some(val => val > 0)) {
                         newDatasets.push({
                             type: 'bar', label: cat, data: catData,
@@ -706,6 +759,9 @@
             });
 
             Object.keys(categoryMap).forEach(cat => {
+                // Do not show leaderboard card for Discontinued category
+                if (cat === "ยกเลิกจำหน่าย") return;
+
                 let catProducts = categoryMap[cat].map(p => ({ name: p, sum: productSums[p] }));
                 catProducts.sort((a, b) => b.sum - a.sum);
                 let topProducts = catProducts.filter(p => p.sum > 0).slice(0, 5);
@@ -801,6 +857,7 @@
             tbodyYoY.innerHTML = ''; 
 
             productsList.forEach(p => {
+                // If it's discontinued and zero in both years, maybe skip? We will filter active anyway.
                 let y1Sum = 0, y2Sum = 0;
                 monthNames.forEach((mName, idx) => {
                     let match = mName.match(/\d{2,4}$/);
@@ -874,7 +931,7 @@
         function saveDataToLocal() {
             localStorage.setItem('packReportData_v7', JSON.stringify(dataMatrix));
             localStorage.setItem('packReportMonthNames_v7', JSON.stringify(monthNames));
-            localStorage.setItem('packReportCategoryMap_v7', JSON.stringify(categoryMap)); // Save custom products
+            localStorage.setItem('packReportCategoryMap_v7', JSON.stringify(categoryMap)); 
             
             const toast = document.getElementById('save-toast');
             toast.classList.remove('translate-y-32', 'opacity-0');
@@ -911,7 +968,6 @@
             
             const modal = document.getElementById('addProductModal');
             modal.classList.remove('hidden');
-            // Small timeout to allow display:block before opacity transition
             setTimeout(() => { modal.classList.remove('opacity-0'); }, 10);
         }
 
@@ -937,16 +993,13 @@
                 return; 
             }
 
-            // Update Data Structures
             categoryMap[cat].push(name);
             productsList.push(name);
             dataMatrix[name] = new Array(monthNames.length).fill(0);
             
-            // Re-render UI
             renderMonthlyTable();
             populateProductDropdown();
             
-            // Keep the selected mode if it's currently on 'prod' so user can see it
             if(currentChartMode === 'prod') {
                 const prodSelect = document.getElementById('singleProductSelect');
                 prodSelect.value = name;
@@ -957,6 +1010,117 @@
             saveDataToLocal();
 
             closeAddProductModal();
+        }
+
+        // --- EDIT/DELETE PRODUCT LOGIC ---
+        let currentEditProduct = "";
+        let currentEditCategory = "";
+
+        function openEditProductModal(product, cat) {
+            currentEditProduct = product;
+            currentEditCategory = cat;
+
+            const catSelect = document.getElementById('editProductCategory');
+            catSelect.innerHTML = '';
+            Object.keys(categoryMap).forEach(c => {
+                catSelect.add(new Option(c, c));
+            });
+            catSelect.value = cat;
+
+            document.getElementById('editProductName').value = product;
+
+            const modal = document.getElementById('editProductModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); }, 10);
+        }
+
+        function closeEditProductModal() {
+            const modal = document.getElementById('editProductModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function submitEditProduct() {
+            const nameInput = document.getElementById('editProductName');
+            const newName = nameInput.value.trim();
+            const newCat = document.getElementById('editProductCategory').value;
+
+            if(!newName) {
+                alert('กรุณากรอกชื่อสินค้า/รุ่นให้ครบถ้วน');
+                nameInput.focus();
+                return;
+            }
+            if(newName !== currentEditProduct && productsList.includes(newName)) {
+                alert('มีชื่อสินค้านี้อยู่ในระบบแล้ว กรุณาใช้ชื่ออื่น');
+                nameInput.focus();
+                return;
+            }
+
+            categoryMap[currentEditCategory] = categoryMap[currentEditCategory].filter(p => p !== currentEditProduct);
+
+            if (newName !== currentEditProduct) {
+                const pIndex = productsList.indexOf(currentEditProduct);
+                if(pIndex > -1) productsList[pIndex] = newName;
+
+                dataMatrix[newName] = dataMatrix[currentEditProduct];
+                delete dataMatrix[currentEditProduct];
+
+                yoyMatrix[newName] = yoyMatrix[currentEditProduct];
+                delete yoyMatrix[currentEditProduct];
+            }
+
+            categoryMap[newCat].push(newName);
+
+            renderMonthlyTable();
+            populateProductDropdown();
+
+            if(currentChartMode === 'prod') {
+                const prodSelect = document.getElementById('singleProductSelect');
+                prodSelect.value = newName;
+            }
+
+            updateMonthlyDashboard();
+            updateYoYDashboard();
+            saveDataToLocal();
+
+            closeEditProductModal();
+        }
+
+        function deleteProduct() {
+            if(confirm(`🚨 คำเตือน: ลบถาวร!\nคุณแน่ใจหรือไม่ว่าต้องการลบ "${currentEditProduct}" ออกจากระบบ?\n(ข้อมูลประวัติยอดแพ็คทั้งหมดของสินค้านี้จะหายไปจากยอดรวมทันที)\n\n* หากไม่ต้องการให้ยอดหาย แนะนำให้ใช้ปุ่ม 'เลิกจำหน่าย' แทนครับ`)) {
+                categoryMap[currentEditCategory] = categoryMap[currentEditCategory].filter(p => p !== currentEditProduct);
+                productsList = productsList.filter(p => p !== currentEditProduct);
+                delete dataMatrix[currentEditProduct];
+                delete yoyMatrix[currentEditProduct];
+
+                renderMonthlyTable();
+                populateProductDropdown();
+
+                if(currentChartMode === 'prod') {
+                    setChartMode('cat'); 
+                }
+
+                updateMonthlyDashboard();
+                updateYoYDashboard();
+                saveDataToLocal();
+
+                closeEditProductModal();
+            }
+        }
+
+        function archiveProduct() {
+            if(confirm(`ต้องการย้าย "${currentEditProduct}" ไปไว้ในหมวด "ยกเลิกจำหน่าย" หรือไม่?\n\n(สินค้าจะถูกซ่อนไว้ด้านล่างสุด แต่ประวัติยอดแพ็คทั้งหมดจะยังคงอยู่และนำไปคำนวณในยอดรวมตามปกติครับ)`)) {
+                categoryMap[currentEditCategory] = categoryMap[currentEditCategory].filter(p => p !== currentEditProduct);
+                categoryMap["ยกเลิกจำหน่าย"].push(currentEditProduct);
+
+                renderMonthlyTable();
+                populateProductDropdown();
+                updateMonthlyDashboard();
+                updateYoYDashboard();
+                saveDataToLocal();
+
+                closeEditProductModal();
+            }
         }
 
         document.getElementById('kpiInput').addEventListener('input', function() {
