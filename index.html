@@ -187,32 +187,30 @@
                     </div>
                     <div>
                         <h3 class="font-bold text-slate-800 text-lg">เปรียบเทียบยอดรวมรายปี</h3>
-                        <p class="text-sm font-medium text-slate-500">แสดงสินค้าทั้งหมด (เลื่อนขึ้น/ลง เพื่อดูเพิ่มเติม)</p>
+                        <p class="text-sm font-medium text-slate-500">ระบบดึงข้อมูลจากตารางรายเดือนมาสรุปให้โดยอัตโนมัติ</p>
                     </div>
                 </div>
                 
                 <div class="flex items-center gap-4 bg-white p-2.5 px-5 rounded-xl border border-slate-200 shadow-sm">
                     <div class="flex items-center gap-2">
                         <span class="w-3.5 h-3.5 rounded-full bg-slate-300"></span>
-                        <input type="text" id="year1Name" value="ปี 2568" class="w-20 px-1 py-1 text-sm border-b-2 border-transparent focus:border-slate-400 outline-none text-center font-bold text-slate-600 transition-colors">
+                        <select id="year1Select" onchange="updateYoYDashboard()" class="w-24 px-1 py-1 text-sm border-b-2 border-transparent focus:border-slate-400 outline-none text-center font-bold text-slate-600 transition-colors bg-transparent cursor-pointer appearance-none"></select>
                     </div>
                     <span class="text-slate-300 font-black text-sm">VS</span>
                     <div class="flex items-center gap-2">
                         <span class="w-3.5 h-3.5 rounded-full bg-indigo-500"></span>
-                        <input type="text" id="year2Name" value="ปี 2569" class="w-20 px-1 py-1 text-sm border-b-2 border-transparent focus:border-indigo-500 outline-none text-center font-black text-indigo-700 transition-colors">
+                        <select id="year2Select" onchange="updateYoYDashboard()" class="w-24 px-1 py-1 text-sm border-b-2 border-transparent focus:border-indigo-500 outline-none text-center font-black text-indigo-700 transition-colors bg-transparent cursor-pointer appearance-none"></select>
                     </div>
                 </div>
             </div>
 
             <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm mb-8">
-                <div class="overflow-y-auto custom-scrollbar pr-3" style="max-height: 600px;">
-                    <div class="relative w-full" id="yoyChartContainer" style="height: 1500px;">
+                <div class="overflow-x-auto custom-scrollbar pb-3">
+                    <div class="relative h-[450px]" id="yoyChartContainer" style="min-width: 100%;">
                         <canvas id="yoyChart"></canvas>
                     </div>
                 </div>
-                <div class="flex justify-center mt-4 text-slate-400 animate-bounce">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
-                </div>
+                <p class="text-xs text-slate-400 text-center mt-3">เลื่อนซ้าย/ขวา เพื่อดูสินค้ารายการอื่นๆ</p>
             </div>
 
             <div class="overflow-x-auto overflow-y-auto max-h-[500px] custom-scrollbar rounded-2xl border border-slate-200 shadow-sm bg-white">
@@ -220,8 +218,8 @@
                     <thead class="text-xs text-slate-500 uppercase glass-header sticky top-0 z-20 shadow-sm">
                         <tr>
                             <th scope="col" class="px-6 py-5 font-black w-1/3 border-b border-slate-200 bg-slate-50/50">ชื่อสินค้า / รุ่น</th>
-                            <th scope="col" class="px-6 py-5 text-center font-black border-b border-slate-200 bg-slate-50/50" id="th-year1">ปี 2568</th>
-                            <th scope="col" class="px-6 py-5 text-center font-black border-b border-slate-200 bg-slate-50/50" id="th-year2">ปี 2569</th>
+                            <th scope="col" class="px-6 py-5 text-center font-black border-b border-slate-200 bg-slate-50/50" id="th-year1">ปีแรก</th>
+                            <th scope="col" class="px-6 py-5 text-center font-black border-b border-slate-200 bg-slate-50/50" id="th-year2">ปีที่สอง</th>
                             <th scope="col" class="px-6 py-5 text-center font-black border-b border-slate-200 bg-slate-50/50">เติบโต YoY (%)</th>
                         </tr>
                         <tr class="bg-indigo-50 border-b-2 border-indigo-200 shadow-sm">
@@ -300,8 +298,7 @@
 
         let dataMatrix = {}; 
         let yoyMatrix = {};  
-        let yearNames = ["ปี 2568", "ปี 2569"];
-        let monthNames = ["พ.ย. 68", "ธ.ค. 68", "ม.ค. 69", "ก.พ. 69", "มี.ค. 69", "เม.ย. 69"]; // Default starting months
+        let monthNames = ["พ.ย. 68", "ธ.ค. 68", "ม.ค. 69", "ก.พ. 69", "มี.ค. 69", "เม.ย. 69"]; 
         
         productsList.forEach(p => { 
             dataMatrix[p] = []; 
@@ -320,11 +317,9 @@
             prodSelect.appendChild(optgroup);
         });
 
-        // Load Data - Bumped to v6 for dynamic lengths
-        const savedMonthly = localStorage.getItem('packReportData_v6');
-        const savedYoY = localStorage.getItem('packReportYoY_v6');
-        const savedYearNames = localStorage.getItem('packReportYearNames_v6');
-        const savedMonthNames = localStorage.getItem('packReportMonthNames_v6');
+        // Load Data - Bumped to v7 for logic changes
+        const savedMonthly = localStorage.getItem('packReportData_v7');
+        const savedMonthNames = localStorage.getItem('packReportMonthNames_v7');
 
         if (savedMonthly && savedMonthNames) {
             monthNames = JSON.parse(savedMonthNames);
@@ -385,23 +380,6 @@
             });
         }
 
-        if (savedYoY) {
-            const parsedY = JSON.parse(savedYoY);
-            productsList.forEach(p => { if(parsedY[p]) yoyMatrix[p] = parsedY[p]; });
-        } else {
-            Object.keys(dataMatrix).forEach(p => {
-                let sum = dataMatrix[p].reduce((a,b)=>a+b, 0);
-                if(sum > 0) yoyMatrix[p] = [Math.floor(sum * 1.5), sum * 2]; 
-                else yoyMatrix[p] = [0, 0];
-            });
-        }
-
-        if (savedYearNames) {
-            yearNames = JSON.parse(savedYearNames);
-            document.getElementById('year1Name').value = yearNames[0];
-            document.getElementById('year2Name').value = yearNames[1];
-        }
-
         // --- 2. DYNAMIC TABLE GENERATOR ---
         function renderMonthlyTable() {
             const headerRow = document.getElementById('month-header-row');
@@ -409,28 +387,23 @@
             const growthRow = document.getElementById('growth-row');
             const tbody = document.getElementById('dataTableBody');
 
-            // Clear current structure
             headerRow.innerHTML = '<th scope="col" class="px-6 py-5 font-black min-w-[220px] max-w-[280px] border-b border-slate-200 tracking-wider text-slate-700 bg-slate-50/90 backdrop-blur sticky left-0 z-30">ชื่อสินค้า / รุ่น</th>';
             totalRow.innerHTML = '<th scope="row" class="px-6 py-4 font-black text-indigo-900 whitespace-nowrap bg-indigo-50/90 backdrop-blur border-r border-white/50 sticky left-0 z-30">ยอดรวมทั้งหมด</th>';
             growthRow.innerHTML = '<th scope="row" class="px-6 py-3 text-slate-500 whitespace-nowrap text-xs font-semibold bg-white/90 backdrop-blur border-r border-slate-50 sticky left-0 z-30">เติบโตเทียบเดือนก่อน (MoM)</th>';
             tbody.innerHTML = '';
 
-            // Generate Columns dynamically based on monthNames.length
             for(let i=0; i<monthNames.length; i++) {
-                // Header
                 const th = document.createElement('th');
                 th.className = "px-3 py-4 border-b border-slate-200 bg-slate-50/50 hover:bg-white transition-colors min-w-[110px]";
                 th.innerHTML = `<input type="text" data-index="${i}" class="month-name-input w-full text-center font-black bg-transparent border-b-2 border-transparent hover:border-indigo-300 focus:border-indigo-500 outline-none text-slate-700 uppercase tracking-wider" value="${monthNames[i]}">`;
                 headerRow.appendChild(th);
 
-                // Total
                 const tdT = document.createElement('td');
                 tdT.className = "px-3 py-4 text-center font-black text-indigo-900 text-base";
                 tdT.id = `total-${i}`;
                 tdT.innerText = "0";
                 totalRow.appendChild(tdT);
 
-                // Growth
                 const tdG = document.createElement('td');
                 tdG.className = i === 0 ? "px-3 py-3 text-center text-slate-300 font-medium text-xs" : "px-3 py-3 text-center font-black text-xs";
                 tdG.id = `growth-${i}`;
@@ -438,12 +411,13 @@
                 growthRow.appendChild(tdG);
             }
 
-            // Re-attach header listeners
+            // Bind Header Logic
             document.querySelectorAll('.month-name-input').forEach(input => {
                 input.addEventListener('input', function() {
                     const idx = parseInt(this.getAttribute('data-index'));
                     monthNames[idx] = this.value;
                     updateMonthlyDashboard(); 
+                    updateYoYDashboard(); // Update YoY as years might change
                     clearTimeout(saveTimeout); saveTimeout = setTimeout(saveDataToLocal, 800);
                 });
             });
@@ -471,7 +445,7 @@
                 });
             });
 
-            // Re-attach data listeners
+            // Bind Data Logic
             document.querySelectorAll('.data-input[data-type="monthly"]').forEach(input => {
                 input.addEventListener('input', function() {
                     const product = this.getAttribute('data-product');
@@ -481,44 +455,28 @@
                     
                     dataMatrix[product][idx] = val; 
                     updateMonthlyDashboard();
+                    updateYoYDashboard(); // Update YoY as data changed
                     clearTimeout(saveTimeout); saveTimeout = setTimeout(saveDataToLocal, 800);
                 });
             });
         }
 
-        // Render Initial Monthly Table
-        renderMonthlyTable();
-
-        // Render YoY Table
-        const tbodyYoY = document.getElementById('yoyTableBody');
-        productsList.forEach((product) => {
-            const tr = document.createElement('tr');
-            tr.className = "hover:bg-slate-50 transition-colors even:bg-slate-50/40 group";
-            let html = `<th scope="row" class="px-6 py-3 whitespace-nowrap text-slate-700 font-semibold">${product}</th>`;
-            for(let i=0; i<2; i++) {
-                let val = yoyMatrix[product][i] === 0 ? '' : yoyMatrix[product][i];
-                html += `<td class="px-4 py-2 text-center group-hover:bg-slate-50/50">
-                    <input type="number" data-type="yoy" data-product="${product}" data-index="${i}" value="${val}" placeholder="0"
-                    class="data-input w-full max-w-[120px] px-3 py-2 text-center bg-slate-50/50 border border-transparent focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 rounded-lg outline-none transition-all font-bold placeholder:text-slate-300 placeholder:font-normal ${i===1 ? 'text-indigo-700' : 'text-slate-800'}">
-                </td>`;
-            }
-            html += `<td class="px-6 py-3 text-center font-black" id="yoy-growth-${product}">-</td>`;
-            tr.innerHTML = html;
-            tbodyYoY.appendChild(tr);
-        });
-
-        // Add YoY Data Listeners
-        document.querySelectorAll('.data-input[data-type="yoy"]').forEach(input => {
-            input.addEventListener('input', function() {
-                const product = this.getAttribute('data-product');
-                const idx = parseInt(this.getAttribute('data-index'));
-                let val = parseInt(this.value);
-                if (isNaN(val) || val < 0) val = 0; 
-                yoyMatrix[product][idx] = val; 
-                updateYoYDashboard();
-                clearTimeout(saveTimeout); saveTimeout = setTimeout(saveDataToLocal, 800);
+        // Extract years dynamically from month headers
+        function getAvailableYears() {
+            let years = new Set();
+            monthNames.forEach(m => {
+                let match = m.match(/\d{2,4}$/); // matches e.g. "68" or "2568"
+                if(match) {
+                    let y = parseInt(match[0]);
+                    if(y < 100) y += 2500; // Convert 2 digits to Thai year
+                    years.add(y);
+                }
             });
-        });
+            let sortedYears = Array.from(years).sort((a,b) => a - b);
+            if(sortedYears.length === 0) sortedYears = [2568, 2569]; // Fallback
+            else if(sortedYears.length === 1) sortedYears.push(sortedYears[0] + 1); // Make sure there's at least 2 options
+            return sortedYears;
+        }
 
         // --- 3. CHART MODES & INITIALIZATION ---
         Chart.register(ChartDataLabels);
@@ -567,12 +525,11 @@
         let yoyChart = new Chart(ctxYoY, {
             type: 'bar', data: { labels: [], datasets: [] },
             options: {
-                indexAxis: 'y', 
-                responsive: true, maintainAspectRatio: false, layout: { padding: { right: 40 } },
+                responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } },
                 plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, font: { ...chartFont, weight: '500' } } }, tooltip: { titleFont: chartFont, bodyFont: chartFont } },
                 scales: {
-                    x: { border: {display: false}, grid: { color: '#f1f5f9' }, title: { display: true, text: 'ยอดรวมทั้งปี (เครื่อง)', font: { ...chartFont, weight: '600' }, color: '#94a3b8' }, ticks: { font: chartFont, color: '#64748b' }, grace: '10%' },
-                    y: { grid: { display: false }, ticks: { font: { ...chartFont, weight: 'bold' }, color: '#334155' } }
+                    x: { grid: { display: false }, ticks: { font: { ...chartFont, weight: 'bold' }, color: '#334155', maxRotation: 45, minRotation: 45 } },
+                    y: { border: {display: false}, grid: { color: '#f1f5f9' }, title: { display: true, text: 'ยอดรวมทั้งปี (เครื่อง)', font: { ...chartFont, weight: '600' }, color: '#94a3b8' }, ticks: { font: chartFont, color: '#64748b' }, grace: '15%' }
                 }
             }
         });
@@ -671,7 +628,6 @@
                 });
             }
 
-            // Expand chart width dynamically if months > 6 to avoid squeezing
             const chartMinW = Math.max(100, len * 70); 
             document.getElementById('chartScrollContainer').style.minWidth = `${chartMinW}px`;
 
@@ -757,28 +713,79 @@
         }
 
         function updateYoYDashboard() {
-            document.getElementById('th-year1').innerText = yearNames[0];
-            document.getElementById('th-year2').innerText = yearNames[1];
+            const availableYears = getAvailableYears();
+            const y1Select = document.getElementById('year1Select');
+            const y2Select = document.getElementById('year2Select');
+            
+            // Populate Dropdowns if needed
+            if(y1Select.options.length === 0 || y1Select.options.length !== availableYears.length) {
+                let y1Val = y1Select.value;
+                let y2Val = y2Select.value;
+                y1Select.innerHTML = '';
+                y2Select.innerHTML = '';
+                availableYears.forEach(y => {
+                    y1Select.add(new Option(`ปี ${y}`, y));
+                    y2Select.add(new Option(`ปี ${y}`, y));
+                });
+                
+                if(y1Val && availableYears.includes(parseInt(y1Val))) y1Select.value = y1Val;
+                else y1Select.value = availableYears[Math.max(0, availableYears.length - 2)];
+                
+                if(y2Val && availableYears.includes(parseInt(y2Val))) y2Select.value = y2Val;
+                else y2Select.value = availableYears[availableYears.length - 1];
+            }
+
+            const targetY1 = parseInt(y1Select.value);
+            const targetY2 = parseInt(y2Select.value);
+
+            let yearName1 = `ปี ${targetY1}`;
+            let yearName2 = `ปี ${targetY2}`;
+            
+            document.getElementById('th-year1').innerText = yearName1;
+            document.getElementById('th-year2').innerText = yearName2;
 
             let sumYear1 = 0, sumYear2 = 0;
             let productYoYSums = [];
+            const tbodyYoY = document.getElementById('yoyTableBody');
+            tbodyYoY.innerHTML = ''; // Clear table body
 
             productsList.forEach(p => {
-                let y1 = yoyMatrix[p][0], y2 = yoyMatrix[p][1];
-                sumYear1 += y1; sumYear2 += y2;
+                // Auto-calculate from monthly data
+                let y1Sum = 0, y2Sum = 0;
+                monthNames.forEach((mName, idx) => {
+                    let match = mName.match(/\d{2,4}$/);
+                    if(match) {
+                        let y = parseInt(match[0]);
+                        if(y < 100) y += 2500;
+                        if(y === targetY1) y1Sum += dataMatrix[p][idx] || 0;
+                        if(y === targetY2) y2Sum += dataMatrix[p][idx] || 0;
+                    }
+                });
                 
-                let growthCell = document.getElementById(`yoy-growth-${p}`);
-                if (y1 === 0 && y2 > 0) {
-                    growthCell.innerText = "+100%"; growthCell.className = "px-6 py-3 text-center font-black text-emerald-500";
-                } else if (y1 === 0 && y2 === 0) {
-                    growthCell.innerText = "-"; growthCell.className = "px-6 py-3 text-center text-slate-300";
-                } else {
-                    let pct = (((y2 - y1) / y1) * 100).toFixed(1);
-                    if (pct > 0) { growthCell.innerText = `+${pct}%`; growthCell.className = "px-6 py-3 text-center font-black text-emerald-500"; }
-                    else if (pct < 0) { growthCell.innerText = `${pct}%`; growthCell.className = "px-6 py-3 text-center font-black text-rose-500"; }
-                    else { growthCell.innerText = `0%`; growthCell.className = "px-6 py-3 text-center font-bold text-slate-300"; }
+                sumYear1 += y1Sum; 
+                sumYear2 += y2Sum;
+                
+                productYoYSums.push({ name: p, y1: y1Sum, y2: y2Sum });
+                
+                // Render Read-Only Table Row
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors even:bg-slate-50/40 group";
+                let html = `<th scope="row" class="px-6 py-4 whitespace-nowrap text-slate-700 font-semibold border-b border-slate-100">${p}</th>`;
+                html += `<td class="px-6 py-4 text-center text-slate-600 font-semibold border-b border-slate-100 group-hover:bg-slate-50/50">${y1Sum === 0 ? '-' : y1Sum.toLocaleString()}</td>`;
+                html += `<td class="px-6 py-4 text-center text-indigo-700 font-black border-b border-slate-100 group-hover:bg-slate-50/50">${y2Sum === 0 ? '-' : y2Sum.toLocaleString()}</td>`;
+                
+                let growthHtml = `<td class="px-6 py-4 text-center font-bold text-slate-300 border-b border-slate-100">-</td>`;
+                if (y1Sum === 0 && y2Sum > 0) {
+                    growthHtml = `<td class="px-6 py-4 text-center font-black text-emerald-500 border-b border-slate-100">+100%</td>`;
+                } else if (y1Sum > 0) {
+                    let pct = (((y2Sum - y1Sum) / y1Sum) * 100).toFixed(1);
+                    if (pct > 0) { growthHtml = `<td class="px-6 py-4 text-center font-black text-emerald-500 border-b border-slate-100">+${pct}%</td>`; }
+                    else if (pct < 0) { growthHtml = `<td class="px-6 py-4 text-center font-black text-rose-500 border-b border-slate-100">${pct}%</td>`; }
+                    else { growthHtml = `<td class="px-6 py-4 text-center font-bold text-slate-400 border-b border-slate-100">0%</td>`; }
                 }
-                productYoYSums.push({ name: p, y1: y1, y2: y2 });
+                html += growthHtml;
+                tr.innerHTML = html;
+                tbodyYoY.appendChild(tr);
             });
 
             document.getElementById('yoy-total-1').innerText = sumYear1.toLocaleString();
@@ -794,20 +801,20 @@
             productYoYSums.sort((a, b) => b.y2 - a.y2);
             let activeProducts = productYoYSums.filter(p => p.y1 > 0 || p.y2 > 0);
             
-            const newHeight = Math.max(400, activeProducts.length * 45);
-            document.getElementById('yoyChartContainer').style.height = `${newHeight}px`;
+            const newWidth = Math.max(100, activeProducts.length * 70); // ขยายความกว้างกราฟตามจำนวนสินค้า
+            document.getElementById('yoyChartContainer').style.minWidth = `${newWidth}px`;
 
             yoyChart.data.labels = activeProducts.map(p => p.name);
             yoyChart.data.datasets = [
                 {
-                    label: yearNames[0], data: activeProducts.map(p => p.y1),
+                    label: yearName1, data: activeProducts.map(p => p.y1),
                     backgroundColor: '#cbd5e1', borderRadius: 4,
-                    datalabels: { color: '#64748b', anchor: 'end', align: 'right', offset: 4, font: { family: "'Prompt', sans-serif", size: 12, weight: '600' }, formatter: v => v>0 ? v : '' }
+                    datalabels: { color: '#64748b', anchor: 'end', align: 'top', offset: 4, font: { family: "'Prompt', sans-serif", size: 12, weight: '600' }, formatter: v => v>0 ? v : '' }
                 },
                 {
-                    label: yearNames[1], data: activeProducts.map(p => p.y2),
+                    label: yearName2, data: activeProducts.map(p => p.y2),
                     backgroundColor: '#6366f1', borderRadius: 4,
-                    datalabels: { color: '#4f46e5', anchor: 'end', align: 'right', offset: 4, font: { family: "'Prompt', sans-serif", size: 13, weight: 'bold' }, formatter: v => v>0 ? v : '' }
+                    datalabels: { color: '#4f46e5', anchor: 'end', align: 'top', offset: 4, font: { family: "'Prompt', sans-serif", size: 13, weight: 'bold' }, formatter: v => v>0 ? v : '' }
                 }
             ];
             yoyChart.update();
@@ -816,17 +823,14 @@
         // --- 5. EVENT LISTENERS & SAVE ---
         let saveTimeout;
         function saveDataToLocal() {
-            localStorage.setItem('packReportData_v6', JSON.stringify(dataMatrix));
-            localStorage.setItem('packReportYoY_v6', JSON.stringify(yoyMatrix));
-            localStorage.setItem('packReportYearNames_v6', JSON.stringify(yearNames));
-            localStorage.setItem('packReportMonthNames_v6', JSON.stringify(monthNames));
+            localStorage.setItem('packReportData_v7', JSON.stringify(dataMatrix));
+            localStorage.setItem('packReportMonthNames_v7', JSON.stringify(monthNames));
             
             const toast = document.getElementById('save-toast');
             toast.classList.remove('translate-y-32', 'opacity-0');
             setTimeout(() => { toast.classList.add('translate-y-32', 'opacity-0'); }, 2500);
         }
 
-        // Add New Month (Dynamic Expand)
         function addNewMonth() {
             if(confirm("ระบบจะทำการสร้างช่อง 'เดือนใหม่' ไว้ด้านขวาสุด โดยที่ข้อมูลเดือนเก่าทั้งหมดจะยังคงอยู่\n\nต้องการเพิ่มเดือนใหม่หรือไม่?")) {
                 monthNames.push("เดือนใหม่");
@@ -836,18 +840,15 @@
                 
                 renderMonthlyTable();
                 updateMonthlyDashboard();
+                updateYoYDashboard();
                 saveDataToLocal();
 
-                // Scroll table to the right end
                 const tableContainer = document.getElementById('tableContainer');
                 if(tableContainer) {
                     setTimeout(() => tableContainer.scrollLeft = tableContainer.scrollWidth, 100);
                 }
             }
         }
-
-        document.getElementById('year1Name').addEventListener('input', function() { yearNames[0] = this.value; updateYoYDashboard(); clearTimeout(saveTimeout); saveTimeout = setTimeout(saveDataToLocal, 800); });
-        document.getElementById('year2Name').addEventListener('input', function() { yearNames[1] = this.value; updateYoYDashboard(); clearTimeout(saveTimeout); saveTimeout = setTimeout(saveDataToLocal, 800); });
         
         document.getElementById('kpiInput').addEventListener('input', function() {
             let newKpi = parseInt(this.value) || 0;
@@ -862,10 +863,13 @@
                 productsList.forEach(p => { dataMatrix[p] = new Array(monthNames.length).fill(0); });
                 document.querySelectorAll('.data-input[data-type="monthly"]').forEach(i => i.value = '');
                 updateMonthlyDashboard();
+                updateYoYDashboard();
                 saveDataToLocal();
             }
         }
 
+        // Initialize App
+        renderMonthlyTable();
         updateMonthlyDashboard();
         updateYoYDashboard();
     </script>
