@@ -12,7 +12,7 @@
     <style>
         body {
             font-family: 'Prompt', sans-serif;
-            background-color: #1b263b; /* โทนสีกรมท่า/น้ำเงินเข้มตามรูป */
+            background-color: #1b263b;
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
@@ -36,16 +36,14 @@
         
         .progress-bar-fill { transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        /* Glassmorphism */
         .glass-header {
             background: rgba(248, 250, 252, 0.95);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
         
-        /* Fancy Hover for Rows */
         .table-row-hover:hover th, .table-row-hover:hover td {
-            background-color: rgba(238, 242, 255, 0.6) !important; /* light indigo */
+            background-color: rgba(238, 242, 255, 0.6) !important; 
         }
     </style>
 </head>
@@ -54,8 +52,8 @@
     <div class="bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.4)] border border-slate-200 w-full max-w-[95vw] xl:max-w-[1400px] p-6 md:p-8 lg:p-10 relative overflow-hidden">
         
         <!-- ==================== HEADER & TABS ==================== -->
-        <div class="mb-8">
-            <div class="flex flex-col lg:flex-row justify-between lg:items-end gap-6 mb-8">
+        <div class="mb-6">
+            <div class="flex flex-col lg:flex-row justify-between lg:items-end gap-6 mb-6">
                 <div>
                     <h1 class="text-3xl md:text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600">รายงานวิเคราะห์ยอดแพ็คสินค้าออก</h1>
                     <p class="text-slate-500 mt-2 font-medium flex items-center gap-2">
@@ -82,7 +80,13 @@
                     </button>
                 </nav>
             </div>
-            <div class="h-px bg-gradient-to-r from-slate-200 via-slate-200 to-transparent w-full"></div>
+            
+            <!-- GLOBAL QUICK STATS WIDGETS (Visible on all tabs) -->
+            <div id="quick-stats-container" class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+                <!-- Injected by JS -->
+            </div>
+
+            <div class="h-px bg-gradient-to-r from-slate-200 via-slate-200 to-transparent w-full mb-8"></div>
         </div>
 
         <!-- ==================== VIEW: DASHBOARD ==================== -->
@@ -109,17 +113,18 @@
                 </div>
                 
                 <div class="flex items-center gap-3">
-                    <!-- เพิ่มปุ่มกรองช่วงเวลาสำหรับกราฟ -->
+                    <!-- TIMEFRAME FILTER -->
                     <div class="flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100 transition-all hover:shadow-md hover:-translate-y-0.5">
                         <span class="text-sm font-bold text-slate-500">ช่วงเวลา:</span>
                         <select id="chartTimeframeSelect" onchange="updateMonthlyDashboard()" class="text-sm font-black text-indigo-600 bg-transparent border-none focus:ring-0 outline-none cursor-pointer pr-2 appearance-none">
-                            <option value="all">ทั้งหมด</option>
+                            <option value="all">ทั้งหมด (รายเดือน)</option>
                             <option value="6">6 เดือนล่าสุด</option>
                             <option value="3">3 เดือนล่าสุด</option>
                         </select>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                     </div>
 
+                    <!-- KPI -->
                     <div class="flex items-center gap-3 bg-white px-5 py-2.5 rounded-xl border border-slate-200 shadow-sm focus-within:border-rose-400 focus-within:ring-2 focus-within:ring-rose-100 transition-all hover:shadow-md hover:-translate-y-0.5">
                         <span class="text-sm font-bold text-slate-600 flex items-center gap-1.5">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-rose-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
@@ -146,7 +151,7 @@
                         <div class="p-2.5 bg-amber-100 text-amber-600 rounded-xl shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
                         </div>
-                        <h2 class="text-2xl font-bold text-slate-800">สรุป Top 5 สินค้าออกเยอะที่สุด</h2>
+                        <h2 id="leaderboard-title" class="text-2xl font-bold text-slate-800">สรุป Top 5 สินค้าออกเยอะที่สุด</h2>
                     </div>
                     
                     <div class="flex items-center gap-3 bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm hover:border-amber-300 hover:shadow-md transition-all hover:-translate-y-0.5">
@@ -448,7 +453,6 @@
                 }
             });
         } else {
-            // Default mapping
             dataMatrix["13F-WB"] = [13, 12, 18, 14, 21, 45];
             dataMatrix["13F-W"] = [9, 18, 18, 22, 42, 61];
             dataMatrix["20AF"] = [40, 50, 61, 57, 90, 178];
@@ -683,7 +687,6 @@
                 }
             }
 
-            // --- Timeframe Filter Logic ---
             const tfSelect = document.getElementById('chartTimeframeSelect');
             const tfVal = tfSelect ? tfSelect.value : 'all';
             let startIndex = 0;
@@ -769,8 +772,96 @@
             monthlyChart.data.datasets = newDatasets;
             monthlyChart.update();
 
+            renderQuickStats();
             updateLeaderboardDropdown();
             renderLeaderboard();
+        }
+
+        function renderQuickStats() {
+            const container = document.getElementById('quick-stats-container');
+            if(!container) return;
+
+            const len = monthNames.length;
+            if(len === 0) return;
+
+            let lastMonthTotal = 0;
+            let prevMonthTotal = 0;
+            let catTotals = {};
+
+            Object.keys(categoryMap).forEach(cat => catTotals[cat] = 0);
+
+            productsList.forEach(p => {
+                lastMonthTotal += dataMatrix[p][len-1] || 0;
+                if(len > 1) prevMonthTotal += dataMatrix[p][len-2] || 0;
+                
+                let cat = Object.keys(categoryMap).find(c => categoryMap[c].includes(p)) || "อื่นๆ";
+                catTotals[cat] += dataMatrix[p][len-1] || 0;
+            });
+
+            let growthPct = 0;
+            let growthLabel = "0.00%";
+            let growthColor = "text-slate-500";
+            let growthBg = "bg-slate-100";
+            let growthIcon = "";
+
+            if (prevMonthTotal === 0) {
+                growthPct = lastMonthTotal > 0 ? 100 : 0;
+            } else {
+                growthPct = ((lastMonthTotal - prevMonthTotal) / prevMonthTotal) * 100;
+            }
+
+            if (growthPct > 0) {
+                growthLabel = `เติบโต ${growthPct.toFixed(1)}%`;
+                growthColor = "text-emerald-700";
+                growthBg = "bg-emerald-50";
+                growthIcon = `<svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>`;
+            } else if (growthPct < 0) {
+                growthLabel = `ลดลง ${Math.abs(growthPct).toFixed(1)}%`;
+                growthColor = "text-rose-700";
+                growthBg = "bg-rose-50";
+                growthIcon = `<svg class="w-4 h-4 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" /></svg>`;
+            } else {
+                growthLabel = "คงที่";
+            }
+
+            let topCat = "-";
+            let topCatVal = 0;
+            Object.keys(catTotals).forEach(cat => {
+                if(cat !== "ยกเลิกจำหน่าย" && catTotals[cat] > topCatVal) {
+                    topCatVal = catTotals[cat];
+                    topCat = cat;
+                }
+            });
+
+            container.innerHTML = `
+                <div class="bg-white rounded-[1.25rem] p-5 border border-slate-200 shadow-sm flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500 mb-0.5">ยอดรวมเดือนล่าสุด (${monthNames[len-1]})</p>
+                        <h4 class="text-2xl font-black text-slate-800">${lastMonthTotal.toLocaleString()} <span class="text-sm font-semibold text-slate-400">เครื่อง</span></h4>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[1.25rem] p-5 border border-slate-200 shadow-sm flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-full ${growthBg} flex items-center justify-center shrink-0">
+                        ${growthIcon || '<span class="text-slate-400 font-bold">-</span>'}
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500 mb-0.5">เทียบเดือน ${len > 1 ? monthNames[len-2] : '-'}</p>
+                        <h4 class="text-xl font-black ${growthColor}">${growthLabel}</h4>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[1.25rem] p-5 border border-slate-200 shadow-sm flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-amber-500 shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-semibold text-slate-500 mb-0.5">หมวดหมู่ขายดีสุด (${monthNames[len-1]})</p>
+                        <h4 class="text-lg font-black text-slate-800 truncate">${topCat}</h4>
+                    </div>
+                </div>
+            `;
         }
 
         function updateLeaderboardDropdown() {
@@ -833,9 +924,10 @@
                 const style = categoryStyles[cat];
                 
                 let cardHTML = `
-                <div class="bg-white border border-slate-200 rounded-[1.25rem] p-6 shadow-sm hover:shadow-lg transition-all duration-300">
-                    <div class="flex items-center gap-3 mb-5 border-b border-slate-100 pb-4">
-                        <div class="w-10 h-10 rounded-xl ${style.bg} flex items-center justify-center text-white text-lg shadow-sm">
+                <div class="bg-white border border-slate-100 rounded-[1.25rem] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden group hover:-translate-y-1">
+                    <div class="absolute top-0 left-0 w-full h-1.5 ${style.bg} opacity-80 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="flex items-center gap-3 mb-5 border-b border-slate-100 pb-4 mt-1">
+                        <div class="w-10 h-10 rounded-xl ${style.bg} flex items-center justify-center text-white text-lg shadow-md transform group-hover:scale-110 transition-transform">
                             ${style.icon}
                         </div>
                         <h3 class="font-bold text-slate-800 text-lg">${cat}</h3>
@@ -848,16 +940,20 @@
                     topProducts.forEach((tp, index) => {
                         let pct = (tp.sum / maxVal) * 100;
                         cardHTML += `
-                            <div class="group">
-                                <div class="flex justify-between text-sm mb-1.5">
-                                    <span class="font-bold ${index === 0 ? style.text : 'text-slate-600'} flex items-center gap-1.5 truncate pr-2">
-                                        ${index === 0 ? '<span class="text-amber-500">👑</span>' : `<span class="text-slate-300 w-4 inline-block text-xs text-right pr-1">${index+1}.</span>`} 
-                                        ${tp.name}
+                            <div class="group/item">
+                                <div class="flex justify-between items-center text-sm mb-2">
+                                    <span class="font-bold ${index === 0 ? style.text : 'text-slate-600'} flex items-center gap-2 truncate pr-2">
+                                        ${index === 0 
+                                            ? '<span class="text-amber-600 bg-amber-100 rounded-md px-1.5 py-0.5 text-[10px] font-black shadow-sm tracking-wider">👑 1</span>' 
+                                            : `<span class="text-slate-500 bg-slate-100 rounded-md px-1.5 py-0.5 text-[10px] font-black w-6 text-center border border-slate-200">${index+1}</span>`} 
+                                        <span class="truncate" title="${tp.name}">${tp.name}</span>
                                     </span>
-                                    <span class="font-black text-slate-800 shrink-0">${tp.sum.toLocaleString()} <span class="text-xs font-semibold text-slate-400 ml-1">เครื่อง</span></span>
+                                    <span class="font-black text-slate-800 shrink-0 bg-slate-50 px-2 py-0.5 rounded text-xs border border-slate-100 group-hover/item:border-indigo-200 transition-colors">${tp.sum.toLocaleString()} <span class="font-semibold text-slate-400">เครื่อง</span></span>
                                 </div>
-                                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                                    <div class="${style.bg} h-2.5 rounded-full progress-bar-fill shadow-sm group-hover:brightness-110" style="width: ${pct}%"></div>
+                                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden ring-1 ring-inset ring-slate-200/50">
+                                    <div class="${style.bg} h-2 rounded-full progress-bar-fill shadow-sm group-hover/item:brightness-110 relative" style="width: ${pct}%">
+                                        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent to-white/20"></div>
+                                    </div>
                                 </div>
                             </div>
                         `;
